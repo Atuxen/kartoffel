@@ -1,39 +1,54 @@
 #include "TempInternal.h"
 #include <Arduino.h> // for pinMode, digitalWrite, etc.
 
-TempInternal::TempInternal()
-  : _oneWire(_oneWireBusPin),
-    _sensors(&_oneWire)
+TempInternal::TempInternal(int oneWireBusPin)
+  : _oneWire(oneWireBusPin), _sensors(&_oneWire) // ✅ Correct initialization
 {
-  // Nothing else needed here
 }
 
 void TempInternal::begin() {
   _sensors.begin();
+  int deviceCount = _sensors.getDeviceCount();
+  Serial.print("OneWire Devices Found: ");
+  Serial.println(deviceCount);
+  
+  if (deviceCount == 0) {
+      Serial.println("⚠️ ERROR: No OneWire sensors found! Check wiring.");
+  }
+
   pinMode(_heatMatPin, OUTPUT);
-  digitalWrite(_heatMatPin, LOW); // start off
+  digitalWrite(_heatMatPin, LOW);
 }
 
 float TempInternal::getSensorData() {
   _sensors.requestTemperatures();
-  return _sensors.getTempCByIndex(0); 
+  float temp = _sensors.getTempCByIndex(0);
+
+  if (temp == -127.0) {
+    Serial.println("⚠️ ERROR: Sensor not responding. Check wiring!");
+  }
+
+  return temp;
 }
 
 void TempInternal::controlLoop() {
   float currentTemp = getSensorData();
-  float error       = _goalTemp - currentTemp;
-
-  _integral += error;
-  float derivative = error - _lastError;
-  float CONTROL    = _kp * error + _ki * _integral + _kd * derivative;
+  
+  float error = _goalTemp - currentTemp;
+  Serial.println(error);
+ 
+  CONTROL = error;
+  Serial.println(CONTROL);
   _lastError = error;
 
-  // If truly PWM from 0–255, do:
-  CONTROL = constrain(CONTROL, 0, 255);
+  if (error > 0.5){
+    digitalWrite(_heatMatPin, HIGH);
+  }
 
-  Serial.print("PID heat control output: ");
-  Serial.println(CONTROL);
-
-  digitalWrite(_heatMatPin, (CONTROL >= 128) ? HIGH : LOW);
+  else {
+    digitalWrite(_heatMatPin, LOW);
+  }
   
-}
+} 
+
+

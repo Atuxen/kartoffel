@@ -7,7 +7,7 @@
 class TempInternal {
 public:
     // Constructor
-    TempInternal();
+    TempInternal(int oneWireBusPin);
 
     // Initialization
     void begin();
@@ -21,9 +21,11 @@ public:
     // Public read-only sensor name
     const char* _sensorName = "Internal temperature probe";
 
+    float CONTROL = 0.0;
+
 private:
     // Pin assignments
-    int _oneWireBusPin = D2;
+    //int _oneWireBusPin = D2;
     int _heatMatPin    = D3;
 
     // OneWire & DallasTemperature
@@ -31,9 +33,11 @@ private:
     DallasTemperature _sensors;
 
     // PID parameters
-    float _goalTemp = 25.0;
+    float _goalTemp = 30.0;
     float _kp = 2.0, _ki = 0.5, _kd = 1.0;
     float _integral = 0.0, _lastError = 0.0;
+    
+
 };
 
 #endif

@@ -14,6 +14,7 @@ void WifiHelper::setupWifi() {
   Serial.println(ssid);
 
   // For ESP8266, using STATION mode:
+
   WiFi.mode(WIFI_STA);         
   WiFi.begin(ssid, password);  // Start Wi-Fi
 

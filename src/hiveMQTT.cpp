@@ -1,4 +1,4 @@
-#include "MQTT.h"
+#include "hiveMQTT.h"
 #include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 
@@ -29,7 +29,7 @@ void MQTT::setup() {
     if (client.connect(clientId.c_str(), mqtt_username, mqtt_password)) {
       Serial.println("MQTT connected!");
       // Subscribe to some topic(s) if needed
-      client.subscribe("tempGoal");
+      client.subscribe("command");
     } else {
       Serial.print("MQTT connection failed, rc=");
       Serial.println(client.state());
@@ -60,7 +60,7 @@ void MQTT::reconnect() {
     if (client.connect(clientId.c_str(), mqtt_username, mqtt_password)) {
       Serial.println("connected");
       // Re-subscribe if needed
-      client.subscribe("tempGoal");
+      client.subscribe("command");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -85,7 +85,7 @@ void MQTT::publishMessage(const char* topic, JsonDocument doc, boolean retained)
 
 
 void MQTT::publishLoop(TempInternal& object) {
-  DynamicJsonDocument doc(512);
+  JsonDocument doc;
   //JsonDocument doc;
   doc["deviceId"] = "Kartoffel chip";
   doc["siteId"] = "Food lab";
@@ -109,6 +109,8 @@ void MQTT::mqttCallback(char* topic, byte* payload, unsigned int length) {
 
   Serial.println("Message arrived [" + String(topic) + "]: " + incomingMessage);
 
+  // Her skal logikken være for callback
+
   // Because the callback is static, we need a reference to the *single* MQTT instance if we want to store data
   // Easiest solution: make `callbackData` static or global, or have a global pointer to your MQTT instance.
   // For example, if you have only 1 MQTT object, you can do:
@@ -127,6 +129,8 @@ void MQTT::mqttCallback(char* topic, byte* payload, unsigned int length) {
   Serial.println("Parsed JSON: ");
   serializeJson(mqtt.callbackData, Serial);
   Serial.println();
+
+
 }
 
 

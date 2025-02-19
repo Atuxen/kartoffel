@@ -1,5 +1,5 @@
-#ifndef MQTT_H
-#define MQTT_H
+#ifndef HIVEMQTT_H
+#define HIVEMQTT_H
 
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
