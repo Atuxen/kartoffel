@@ -18,6 +18,10 @@ class adafruitMQTT {
 
     void publishHeatMat(float value);
 
+
+    void subscribeCommand();
+    float handleMQTT();  // Function to process incoming messages
+
   private:
     // The underlying TCP client
     WiFiClient client;
@@ -29,6 +33,8 @@ class adafruitMQTT {
     Adafruit_MQTT_Publish temperatureFeed;
 
     Adafruit_MQTT_Publish heatMatFeed;
+
+    Adafruit_MQTT_Subscribe command;
 };
 
 #endif

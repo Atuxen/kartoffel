@@ -40,6 +40,11 @@ void loop() {
     //mqtt.mqttLoop();
     myAdafruitMQTT.reconnectIfNeeded();
     tempInt.controlLoop();
+
+    float value = myAdafruitMQTT.handleMQTT();        // Process any incoming messages
+    if (value != -100){
+        tempInt._goalTemp = value;
+    }
     
     //JsonDocument json = mqtt.getCallbackData();
     
@@ -49,7 +54,7 @@ void loop() {
       //mqtt.publishLoop(tempInt); //HiveMQ
 
       myAdafruitMQTT.publishTemperature(tempInt.getSensorData());
-      myAdafruitMQTT.publishHeatMat((tempInt.CONTROL>= 0.5) ? HIGH : LOW);
+      myAdafruitMQTT.publishHeatMat((tempInt.CONTROL>= 0) ? HIGH : LOW);
       
 
     }

@@ -22,6 +22,7 @@ public:
     const char* _sensorName = "Internal temperature probe";
 
     float CONTROL = 0.0;
+    float _goalTemp = 100.0;
 
 private:
     // Pin assignments
@@ -33,7 +34,7 @@ private:
     DallasTemperature _sensors;
 
     // PID parameters
-    float _goalTemp = 30.0;
+    
     float _kp = 2.0, _ki = 0.5, _kd = 1.0;
     float _integral = 0.0, _lastError = 0.0;
     

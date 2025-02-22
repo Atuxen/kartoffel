@@ -2,7 +2,7 @@
 #include <Arduino.h> // for pinMode, digitalWrite, etc.
 
 TempInternal::TempInternal(int oneWireBusPin)
-  : _oneWire(oneWireBusPin), _sensors(&_oneWire) // ✅ Correct initialization
+  : _oneWire(oneWireBusPin), _sensors(&_oneWire) // Correct initialization
 {
 }
 
@@ -13,7 +13,7 @@ void TempInternal::begin() {
   Serial.println(deviceCount);
   
   if (deviceCount == 0) {
-      Serial.println("⚠️ ERROR: No OneWire sensors found! Check wiring.");
+      Serial.println("ERROR: No OneWire sensors found! Check wiring.");
   }
 
   pinMode(_heatMatPin, OUTPUT);
@@ -25,7 +25,7 @@ float TempInternal::getSensorData() {
   float temp = _sensors.getTempCByIndex(0);
 
   if (temp == -127.0) {
-    Serial.println("⚠️ ERROR: Sensor not responding. Check wiring!");
+    Serial.println("ERROR: Sensor not responding. Check wiring!");
   }
 
   return temp;
@@ -41,7 +41,7 @@ void TempInternal::controlLoop() {
   Serial.println(CONTROL);
   _lastError = error;
 
-  if (error > 0.5){
+  if (error >= 0){
     digitalWrite(_heatMatPin, HIGH);
   }
 
