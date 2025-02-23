@@ -18,21 +18,15 @@ HumControl Hum;
 // Variables
 static unsigned long lastCheckPub = 0;
 
-
 void setup() {
     Serial.begin(115200);
     myWifi.setupWifi();
-    
     delay(1000); 
-
     Temp.begin();
     Hum.begin();
-
-
 }
 
 void loop() {
-
     myAdafruitMQTT.reconnectIfNeeded();
     Temp.control();
     Hum.control();
@@ -47,8 +41,6 @@ void loop() {
     if (millis() - lastCheckPub >= 30000) {
       lastCheckPub = millis();
 
-      //myAdafruitMQTT.publishTemperature(Temp.probe.getSensorData());
-      //myAdafruitMQTT.publishHeatMat((Temp.controlSignal> 0) ? HIGH : LOW);
       myAdafruitMQTT.temperatureFeed.publish(Temp.probe.getSensorData());
       myAdafruitMQTT.heatMatFeed.publish((Temp.controlSignal> 0) ? HIGH : LOW);
       myAdafruitMQTT.DHT11.publish(Hum.dht.getHumidity());
@@ -57,6 +49,7 @@ void loop() {
 
     }
 
+    // Serial prints
     Serial.println("DHT data Humidity");
     Serial.println(Hum.dht.getHumidity());
     Serial.println("DHT data temperature");
