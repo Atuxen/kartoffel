@@ -5,6 +5,9 @@ adafruitMQTT::adafruitMQTT()
   : mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY),
     temperatureFeed(&mqtt, AIO_USERNAME "/feeds/temperature"),
     heatMatFeed(&mqtt, AIO_USERNAME "/feeds/heatMatControl"),
+    DHT11(&mqtt, AIO_USERNAME "/feeds/humidity"),
+    humidifier(&mqtt, AIO_USERNAME "/feeds/humidifierControl"),
+    extTemp(&mqtt, AIO_USERNAME "/feeds/externalTemp"),
     command(&mqtt, AIO_USERNAME "/feeds/command") // Subscribe to heat mat control feed
 {
   // Constructor body is empty since we're initializing in the list above
@@ -51,6 +54,8 @@ void adafruitMQTT::reconnectIfNeeded() {
     Serial.println("AdafruitMQTT: Connected!");
   }
 }
+
+
 
 void adafruitMQTT::publishTemperature(float value) {
   if (!temperatureFeed.publish(value)) {

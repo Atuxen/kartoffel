@@ -18,23 +18,33 @@ class adafruitMQTT {
 
     void publishHeatMat(float value);
 
+    void publishHumidity(float value);
+
 
     void subscribeCommand();
     float handleMQTT();  // Function to process incoming messages
 
-  private:
+  
     // The underlying TCP client
     WiFiClient client;
 
     // The Adafruit MQTT client
     Adafruit_MQTT_Client mqtt;
 
-    // A publisher object for the temperature feed
+    // Publishers
     Adafruit_MQTT_Publish temperatureFeed;
-
     Adafruit_MQTT_Publish heatMatFeed;
+    Adafruit_MQTT_Publish DHT11;
+    Adafruit_MQTT_Publish humidifier;
+    Adafruit_MQTT_Publish extTemp;
+    
 
+
+
+    // Subscribers
     Adafruit_MQTT_Subscribe command;
+  private:
+
 };
 
 #endif
